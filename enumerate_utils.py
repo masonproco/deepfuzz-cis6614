@@ -75,10 +75,4 @@ def enumerateChildFunctions(lib, functions, childObject, depth):
                 parameter_count += 1
 
             function_args_address.append((function, parameter_count, child_function))
-            fuzz.fuzzFunction(function_args_address)
-
-            # print(args)
-    # print(args)
-    # parameter_count = len(args.parameters) - 1
-    # print(getattr(function))
-    # function_args_address.append((function, parameters_count, getattr(function)))
+            fuzz.fuzzFunction(function_args_address, lib)

@@ -1,8 +1,7 @@
 #importing random module
-import random
-import math
-import qrcode
-import os
+# import qrcode
+import sys
+import importlib
 
 # Import custom modules
 import enumerate_utils
@@ -28,7 +27,7 @@ log = FuzzLogger.initializeLogging()
 crash_dict = {}
 
 # Fuzz the function
-def fuzzFunction(functions):
+def fuzzFunction(functions, lib):
 
     count = 0
     traverse = True
@@ -78,7 +77,7 @@ def fuzzFunction(functions):
                 children = enumerate_utils.checkChildObject(res)
 
                 if children != []:
-                    enumerate_utils.enumerateChildFunctions(qrcode, children, res, depth)
+                    enumerate_utils.enumerateChildFunctions(lib, children, res, depth)
                 
                 traverse = False
 
@@ -105,35 +104,13 @@ def handleInputGeneration(param_names):
 
 def main():
 
-    functions = enumerate_utils.enumerateLibraryFunctions(qrcode)
+    lib_input = sys.argv[1]
+    lib = importlib.__import__(lib_input)
+
+    functions = enumerate_utils.enumerateLibraryFunctions(lib)
     functions_and_param_count = enumerate_utils.enumerateFunctionArgs(functions)
 
-    fuzzFunction(functions_and_param_count)
-
-    # print("Enter the minimum number of characters for inputs...")
-    # min = int(input())
-    # print("Enter the maximum number of characters for inputs...")
-    # max = int(input())
-    # print("Does fuzzing target require specific characters? Y/N")
-    # specific = input()
-    # if specific == "Y" or specific == "y" or specific == "yes" or specific == "Yes":
-    #     print ("Indicate where in the string characters are required\nEnter a '*' for characters that are to be randomized")
-    #     print ("Enter other characters to format the string\nExample for date format: **/**/****")
-    #     data = input()
-    # while selectfuzz !=1 and selectfuzz !=2 and selectfuzz !=3:
-    #     print("Enter a number to indicate type of fuzzing\n1 = Numeric fuzzing with integers")
-    #     print("2 = Alphanumeric fuzzing output as a string\n3 = Alpanumeric fuzzing with special characters, output as a string")
-    #     selectfuzz = int(input())
-    #     if selectfuzz !=1 and selectfuzz !=2 and selectfuzz !=3:
-    #         print("Please enter 1, 2 or 3")
-    
-    #calls fuzz functions based on inputs
-    # if selectfuzz == 1:
-    #     numf()
-    # if selectfuzz == 2:
-    #     alphanum()
-    # if selectfuzz == 3:
-    #     alphanumspec()    
+    fuzzFunction(functions_and_param_count, lib)
 
 if __name__ == "__main__":
     main()
